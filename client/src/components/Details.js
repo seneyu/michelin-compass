@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/Collapse';
 
 const Details = ({ restaurant }) => {
@@ -11,6 +10,7 @@ const Details = ({ restaurant }) => {
         onClick={() => setOpen(!open)}
         aria-controls="example-collapse-text"
         aria-expanded={open}
+        className="other-buttons"
       >
         Details
       </button>{' '}

@@ -1,29 +1,40 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Details from './Details';
-import Review from './Review';
 
 // passing in the restaurant prop
 const RestaurantCard = ({ restaurant }) => {
-  //   const [favorites, setFavorites] = useState(null);
+  let totalStars = [];
 
-  //   const handleToggleChange = () => {
-  //     setFavorites(!favorites);
-  //   };
-
-  //   const imgOn =
-  //     'https://cdn4.iconfinder.com/data/icons/twitter-29/512/166_Heart_Love_Like_Twitter-128.png';
-  //   const imgOff =
-  //     'https://cdn3.iconfinder.com/data/icons/sympletts-free-sampler/128/heart-128.png';
+  // render star icons
+  for (let i = 0; i < restaurant.distinction; i++) {
+    totalStars.push(
+      <img
+        key={i}
+        src="https://cdn1.iconfinder.com/data/icons/christmas-flat-4/58/019_-_Star-128.png"
+        alt="star-icon"
+        className="icon-star"
+      />
+    );
+  }
 
   return (
     <div className="restaurant-card">
-      <h2>{restaurant.name}</h2>
+      <h4>
+        <b>
+          <span>{totalStars}</span>
+          <br></br>
+          {restaurant.name}
+        </b>
+      </h4>
       <p>{restaurant.address}</p>
       <p>{restaurant.cuisine}</p>
-      <div className="distinction">{restaurant.distinction}</div>
-      {/* <button onClick={handleShowModal}>Details</button> */}
       <Details restaurant={restaurant} />
-      <Review restaurant={restaurant} />
+      <button
+        className="other-buttons"
+        onClick={() => window.open(restaurant.website)}
+      >
+        Website
+      </button>
     </div>
   );
 };
