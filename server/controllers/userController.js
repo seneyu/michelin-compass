@@ -123,8 +123,9 @@ userController.postReview = async (req, res, next) => {
     res.locals.newPost = newPost.rows[0];
     return next();
   } catch (error) {
+    console.error('Database error:', error.message);
     return next({
-      log: 'Error in userController.postReview middleware.',
+      log: `Error in userController.postReview middleware: ${error.message}`,
       status: 500,
       message: { err: 'An error occurred in posting a review.' },
     });
@@ -137,7 +138,7 @@ userController.getReviews = async (req, res, next) => {
     FROM reviews`;
     const getReviews = await db.query(text);
     res.locals.getReviews = getReviews.rows;
-    // console.log('getReviews: ', getReviews.rows);
+    console.log('getReviews: ', getReviews.rows);
     return next();
   } catch (error) {
     return next({

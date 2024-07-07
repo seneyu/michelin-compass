@@ -1,8 +1,6 @@
 import React from 'react';
-import axios from 'axios';
 
 const ReviewForm = ({ restaurants, onSubmit }) => {
-  console.log(restaurants);
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -10,18 +8,11 @@ const ReviewForm = ({ restaurants, onSubmit }) => {
     const rating = event.target.elements['review-rating'].value;
     const comment = event.target.elements['review-comment'].value;
 
+    const newReview = { restaurant, rating, comment };
+
     try {
-      const response = await axios.post('http://localhost:3000/reviews', {
-        restaurant,
-        rating,
-        comment,
-      });
-      if (response) {
-        console.log(response);
-        alert('Review submitted successfully!');
-        onSubmit(response.data);
-        event.target.reset();
-      }
+      await onSubmit(newReview);
+      event.target.reset();
     } catch (error) {
       console.error('An error occurred when posting review: ', error);
       alert(`Error: ${error.response.data.message.err}`);

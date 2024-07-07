@@ -24,9 +24,6 @@ const Nav = () => {
         <Link to="/entries">
           <button className="other-buttons">Reviews</button>
         </Link>
-        <Link to="/writereview">
-          <button className="other-buttons">Write Review</button>
-        </Link>
         <Link to="/login">
           <button className="other-buttons">Login</button>
         </Link>

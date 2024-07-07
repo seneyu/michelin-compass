@@ -57,7 +57,7 @@ app.get('/reviews', userController.getReviews, (req, res) => {
 });
 
 app.post('/reviews', userController.postReview, (req, res) => {
-  res.status(200).json(res.locals.newPost).redirect('/writereview');
+  res.status(200).json(res.locals.newPost);
 });
 
 app.delete('/reviews/:id', userController.deletePost, (req, res) => {
