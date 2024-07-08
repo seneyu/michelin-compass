@@ -1,7 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
+import ModalUpdate from '../pages/ModalUpdate';
 
-const ReviewEntryCard = ({ reviews, onDeleteSubmit }) => {
-  const onClick = async (event) => {
+const ReviewEntryCard = ({
+  restaurants,
+  reviews,
+  onDeleteSubmit,
+  onUpdateSubmit,
+}) => {
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [currentReview, setCurrentReview] = useState(null);
+
+  const handleUpdateClick = (review) => {
+    setCurrentReview(review);
+    setShowUpdateModal(true);
+  };
+
+  const onClickDelete = async (event) => {
     event.preventDefault();
 
     // locate the node id and delete from database
@@ -9,7 +23,7 @@ const ReviewEntryCard = ({ reviews, onDeleteSubmit }) => {
     const reviewId = event.target.id;
 
     try {
-      await onDeleteSubmit(event.target.id);
+      await onDeleteSubmit(reviewId);
       const reviewElement = event.target.closest('.review');
       if (reviewElement) {
         reviewElement.remove();
@@ -24,15 +38,32 @@ const ReviewEntryCard = ({ reviews, onDeleteSubmit }) => {
     <div>
       {reviews.map((review, index) => (
         <div key={index} className="review">
-          {/* <p>Post #{review.id}</p> */}
           <p>Restaurant: {review.restaurant}</p>
           <p>Rating: {review.rating}</p>
           <p>Comment: {review.comment}</p>
-          <button className="other-buttons" id={review.id} onClick={onClick}>
-            Delete Post
+          <button
+            className="other-buttons"
+            onClick={() => handleUpdateClick(review)}
+          >
+            Update
+          </button>
+          <button
+            className="other-buttons"
+            id={review.id}
+            onClick={onClickDelete}
+          >
+            Delete
           </button>
         </div>
       ))}
+      {showUpdateModal && (
+        <ModalUpdate
+          restaurants={restaurants}
+          review={currentReview}
+          onClose={() => setShowUpdateModal(false)}
+          onSubmit={onUpdateSubmit}
+        />
+      )}
     </div>
   );
 };

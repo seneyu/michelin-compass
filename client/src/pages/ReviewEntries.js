@@ -34,14 +34,37 @@ const ReviewEntries = ({ restaurants }) => {
         newReview
       );
       if (response.status === 200) {
-        alert('Review submitted!');
-        const updatedReviews = await fetch('http://localhost:3000/reviews');
-        const data = await updatedReviews.json();
-        setReviews(data);
+        const newPost = response.data;
+        // update the state by appending the newPost
+        // react re-renders the components affected by that state change
+        // have newPost listed on top of list
+        setReviews((prevPosts) => [newPost, ...prevPosts]);
         setShowAddModal(false);
       }
     } catch (error) {
       console.error('An error occurred when posting review: ', error);
+    }
+  };
+
+  const handleUpdate = async (reviewId, updateInfo) => {
+    try {
+      const response = await axios.patch(
+        `http://localhost:3000/reviews/${reviewId}`,
+        updateInfo
+      );
+      if (response.status === 200) {
+        const updatedPost = response.data;
+        // find the index of the updated post in the current reviews array
+        // create a new array with the updated post replaced
+        const updatedIndex = reviews.findIndex(
+          (post) => post.id === updatedPost.id
+        );
+        const updatedReviews = [...reviews];
+        updatedReviews[updatedIndex] = updatedPost;
+        setReviews(updatedReviews);
+      }
+    } catch (error) {
+      console.error('An error occurred when updating post: ', error);
     }
   };
 
@@ -51,7 +74,6 @@ const ReviewEntries = ({ restaurants }) => {
         `http://localhost:3000/reviews/${reviewId}`
       );
       if (response.status === 200) {
-        alert('Post deleted!');
         const updateReviews = reviews.filter(
           (review) => review.id !== parseInt(reviewId)
         );
@@ -77,7 +99,12 @@ const ReviewEntries = ({ restaurants }) => {
           />
         )}
       </div>
-      <ReviewEntryCard reviews={reviews} onDeleteSubmit={handleDelete} />
+      <ReviewEntryCard
+        restaurants={restaurants}
+        reviews={reviews}
+        onDeleteSubmit={handleDelete}
+        onUpdateSubmit={handleUpdate}
+      />
     </div>
   );
 };

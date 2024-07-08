@@ -99,11 +99,11 @@ userController.verifyUser = async (req, res, next) => {
 
 userController.postReview = async (req, res, next) => {
   const { restaurant, rating, comment } = req.body;
-  console.log(req.body);
+  // console.log(req.body);
 
-  console.log('restaurant: ', restaurant);
-  console.log('rating: ', rating);
-  console.log('comment: ', comment);
+  // console.log('restaurant: ', restaurant);
+  // console.log('rating: ', rating);
+  // console.log('comment: ', comment);
 
   if (!restaurant || !rating) {
     return next({
@@ -138,7 +138,7 @@ userController.getReviews = async (req, res, next) => {
     FROM reviews`;
     const getReviews = await db.query(text);
     res.locals.getReviews = getReviews.rows;
-    console.log('getReviews: ', getReviews.rows);
+    // console.log('getReviews: ', getReviews.rows);
     return next();
   } catch (error) {
     return next({
@@ -149,10 +149,42 @@ userController.getReviews = async (req, res, next) => {
   }
 };
 
+userController.updatePost = async (req, res, next) => {
+  const { id } = req.params;
+  const numId = Number(id);
+  const { restaurant, rating, comment } = req.body;
+
+  if (!restaurant || !rating) {
+    return next({
+      log: 'Error in userController.updatePost middleware.',
+      status: 400,
+      message: { err: 'Restaurant name or rating missing.' },
+    });
+  }
+
+  try {
+    const text = `UPDATE reviews 
+    SET restaurant = $1, rating = $2, comment = $3
+    WHERE id = $4
+    RETURNING *`;
+    const params = [restaurant, rating, comment, numId];
+    const updatedPost = await db.query(text, params);
+    // console.log(updatedPost);
+    res.locals.updatedPost = updatedPost.rows[0];
+    return next();
+  } catch (error) {
+    console.error('Error: ', error);
+    return next({
+      log: 'Error in userController.updatePost middleware.',
+      status: 500,
+      message: { err: 'An error occurred in updating the post.' },
+    });
+  }
+};
+
 userController.deletePost = async (req, res, next) => {
   const { id } = req.params;
   const numId = Number(id);
-  console.log(typeof numId);
 
   try {
     const text1 = `SELECT id FROM reviews WHERE id = $1`;
@@ -164,16 +196,18 @@ userController.deletePost = async (req, res, next) => {
         message: { err: 'ID not found.' },
       });
     }
-    const text2 = `DELETE FROM reviews WHERE id = $1 RETURNING *`;
+    const text2 = `DELETE FROM reviews 
+    WHERE id = $1 
+    RETURNING *`;
     const deletedPost = await db.query(text2, [numId]);
     console.log('Post deleted!');
     res.locals.deletedPost = deletedPost.rows[0];
     return next();
   } catch (error) {
     return next({
-      log: 'Error in userController.deleteReview middleware.',
+      log: 'Error in userController.deletePost middleware.',
       status: 500,
-      message: { err: 'An error occurred in deleting the review.' },
+      message: { err: 'An error occurred in deleting the post.' },
     });
   }
 };

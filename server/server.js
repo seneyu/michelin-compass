@@ -60,6 +60,10 @@ app.post('/reviews', userController.postReview, (req, res) => {
   res.status(200).json(res.locals.newPost);
 });
 
+app.patch('/reviews/:id', userController.updatePost, (req, res) => {
+  res.status(200).json(res.locals.updatedPost);
+});
+
 app.delete('/reviews/:id', userController.deletePost, (req, res) => {
   res.status(200).json(res.locals.deletedPost);
 });
