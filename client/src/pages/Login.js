@@ -1,7 +1,6 @@
 // use useAuth hook to handle user authentication
 
 import React, { useState } from 'react';
-import axios from 'axios';
 
 const Login = () => {
   const [data, setData] = useState('');
@@ -17,13 +16,21 @@ const Login = () => {
     // console.log(username, password);
 
     try {
-      const response = await axios.post('http://localhost:3000/login', {
-        username,
-        password,
+      const response = await fetch('http://localhost:3000/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
       });
-      console.log('User Info: ', response);
-      if (response) {
-        setData(response.data);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('User Info: ', data);
+      if (data) {
+        console.log('data: ', data);
+        setData(data);
       }
     } catch (error) {
       console.error('An error occurred when logging in a user: ', error);

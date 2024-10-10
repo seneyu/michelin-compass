@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReviewEntryCard from '../components/ReviewEntryCard';
 import Modal from './Modal';
-import axios from 'axios';
 
 const ReviewEntries = ({ restaurants }) => {
   const [reviews, setReviews] = useState([]);
@@ -12,12 +11,13 @@ const ReviewEntries = ({ restaurants }) => {
       try {
         // get request for fetching review entries
         const response = await fetch('http://localhost:3000/reviews');
-        if (response.ok) {
-          const data = await response.json();
-          setReviews(data);
-        } else {
-          console.error('Failed to fetch reviews.');
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
         }
+
+        const data = await response.json();
+        setReviews(data);
       } catch (error) {
         console.error('An error occurred when fetching data: ', error);
       }
@@ -29,11 +29,19 @@ const ReviewEntries = ({ restaurants }) => {
   // pass a callback to Modal and then ReviewForm to handle the modal closing and refreshing the reviews
   const handleReviewSubmit = async (newReview) => {
     try {
-      const response = await axios.post(
-        'http://localhost:3000/reviews',
-        newReview
-      );
-      if (response.status === 200) {
+      const response = await fetch('http://localhost:3000/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ newReview }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      // if (response.status === 200) {
+      if (data) {
         const newPost = response.data;
         // update the state by appending the newPost
         // react re-renders the components affected by that state change
@@ -48,21 +56,28 @@ const ReviewEntries = ({ restaurants }) => {
 
   const handleUpdate = async (reviewId, updateInfo) => {
     try {
-      const response = await axios.patch(
+      const response = await fetch(
         `http://localhost:3000/reviews/${reviewId}`,
-        updateInfo
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updateInfo),
+        }
       );
-      if (response.status === 200) {
-        const updatedPost = response.data;
-        // find the index of the updated post in the current reviews array
-        // create a new array with the updated post replaced
-        const updatedIndex = reviews.findIndex(
-          (post) => post.id === updatedPost.id
-        );
-        const updatedReviews = [...reviews];
-        updatedReviews[updatedIndex] = updatedPost;
-        setReviews(updatedReviews);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
+
+      const updatedPost = await response.json();
+
+      setReviews((prevReviews) =>
+        prevReviews.map((review) =>
+          review.id === updatedPost.id ? updatedPost : review
+        )
+      );
+
+      console.log('Post updated successfully!');
     } catch (error) {
       console.error('An error occurred when updating post: ', error);
     }
@@ -70,15 +85,22 @@ const ReviewEntries = ({ restaurants }) => {
 
   const handleDelete = async (reviewId) => {
     try {
-      const response = await axios.delete(
-        `http://localhost:3000/reviews/${reviewId}`
+      const response = await fetch(
+        `http://localhost:3000/reviews/${reviewId}`,
+        { method: 'DELETE' }
       );
-      if (response.status === 200) {
-        const updateReviews = reviews.filter(
-          (review) => review.id !== parseInt(reviewId)
-        );
-        setReviews(updateReviews);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
+
+      const data = await response.json();
+
+      const updateReviews = reviews.filter(
+        (review) => review.id !== parseInt(reviewId)
+      );
+      setReviews(updateReviews);
+      console.log('Review deleted successfully!');
     } catch (error) {
       console.error('An error occurred when deleting a review post: ', error);
     }

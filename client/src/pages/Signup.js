@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 
 const Signup = () => {
   const [data, setData] = useState('');
@@ -11,12 +10,19 @@ const Signup = () => {
     const password = event.target.elements['password-signup'].value;
 
     try {
-      const response = await axios.post('http://localhost:3000/signup', {
-        username,
-        password,
+      const response = await fetch('http://localhost:3000/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
       });
-      console.log('User created: ', response.data);
-      setData(response.data);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('User created: ', data);
+      setData(data);
     } catch (error) {
       alert(`Error: ${error.response.data.message.err}`);
     }

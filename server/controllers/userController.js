@@ -154,11 +154,11 @@ userController.updatePost = async (req, res, next) => {
   const numId = Number(id);
   const { restaurant, rating, comment } = req.body;
 
-  if (!restaurant || !rating) {
+  if (!restaurant && rating === undefined) {
     return next({
       log: 'Error in userController.updatePost middleware.',
       status: 400,
-      message: { err: 'Restaurant name or rating missing.' },
+      message: { err: 'No update information provided.' },
     });
   }
 

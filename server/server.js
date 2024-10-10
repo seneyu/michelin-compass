@@ -18,7 +18,7 @@ app.use(cors());
 // alternatively body-parser do the same thing
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // serve static files
@@ -60,7 +60,7 @@ app.post('/reviews', userController.postReview, (req, res) => {
   res.status(200).json(res.locals.newPost);
 });
 
-app.patch('/reviews/:id', userController.updatePost, (req, res) => {
+app.put('/reviews/:id', userController.updatePost, (req, res) => {
   res.status(200).json(res.locals.updatedPost);
 });
 
