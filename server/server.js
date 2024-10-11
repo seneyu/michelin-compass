@@ -1,25 +1,20 @@
-const path = require('path');
+// const path = require('path');
 const express = require('express');
+const cors = require('cors');
+const userController = require('./controllers/userController');
+const { Restaurant } = require('./models/projectModel');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
-const dotenv = require('dotenv');
-const cors = require('cors');
-
-dotenv.config();
-
-const userController = require('./controllers/userController');
 
 app.use(cors());
 
-// check https://stackoverflow.com/questions/23259168/what-are-express-json-and-express-urlencoded
-// need these for POST and PUT requests when receiving data in object i.e. req.body
-// app.use(express.json());
-// app.use(express.urlencoded());
-// alternatively body-parser do the same thing
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// connectToMongoDB();
 
 // serve static files
 // app.use(express.static(path.resolve(__dirname, '../client/public')));
@@ -28,6 +23,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // testing get request for '/' route
 app.get('/', (req, res) => {
   return res.status(200).send('<h1>Hello from Express!</h1>');
+});
+
+app.get('/restaurants', async (req, res) => {
+  try {
+    const response = await Restaurant.find({});
+    return res.send(response);
+  } catch (error) {
+    console.error('Error: ', error);
+  }
 });
 
 app.get('/api/signup', (req, res) => {

@@ -1,4 +1,5 @@
-const db = require('../models/projectModel');
+// const db = require('../models/projectModel');
+const { User, Restaurant } = require('../models/projectModel');
 const bcrypt = require('bcrypt');
 
 const userController = {};

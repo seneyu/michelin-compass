@@ -1,18 +1,57 @@
-const { Pool } = require('pg');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+dotenv.config();
 
-const PG_URI = process.env.PG_URI;
+// // connect to mongodb
+const URI = process.env.MONGO_URI;
 
-// create a new pool using the connection string above
-const pool = new Pool({
-  connectionString: PG_URI,
+mongoose
+  .connect(URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connected to MongoDB...'))
+  .catch((err) => console.error('MongoDB connection error: ', err));
+
+const userSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    required: true,
+  },
+  hashpassword: {
+    type: String,
+    required: true,
+  },
 });
 
-// export an object with property query
-// which is a function that returns the invocation of pool.query() after logging the query
-// this will be required in the controllers to be the access point to the database
-module.exports = {
-  query: (text, params, callback) => {
-    console.log('executed query', text);
-    return pool.query(text, params, callback);
+const restaurantSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
   },
-};
+  address: {
+    type: String,
+    required: true,
+  },
+  cuisine: {
+    type: String,
+  },
+  distinction: {
+    type: Number,
+    required: true,
+  },
+  description: {
+    type: String,
+  },
+  website: {
+    type: String,
+  },
+  number: {
+    type: String,
+  },
+  green: {
+    type: Number,
+  },
+});
+
+const User = mongoose.model('User', userSchema);
+const Restaurant = mongoose.model('Restaurant', restaurantSchema);
+
+module.exports = { User, Restaurant };
