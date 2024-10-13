@@ -9,7 +9,7 @@ import Signup from './pages/Signup';
 import Login from './pages/Login';
 import WriteReview from './pages/WriteReview';
 import ReviewEntries from './pages/ReviewEntries';
-const API_KEY = process.env.GOOGLE_MAPS_API_KEY;
+// const API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
 const App = () => {
   const [fetchError, setFetchError] = useState(null);
@@ -19,7 +19,7 @@ const App = () => {
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
-        const response = await fetch('http://localhost:3000/restaurants');
+        const response = await fetch('/api/restaurants');
 
         if (!response.ok) {
           throw new Error('Network response was not ok.');
@@ -27,17 +27,6 @@ const App = () => {
         const data = await response.json();
         console.log('data: ', data);
         setRestaurants(data);
-        // if (error) {
-        //   setFetchError('Could not fetch the restaurants');
-        //   setRestaurants(null);
-        //   console.log(error);
-        // }
-
-        // if (data) {
-        //   console.log('data: ', data);
-        //   // setRestaurants(data);
-        //   // setFetchError(null);
-        // }
       } catch (error) {
         setFetchError('Could not fetch the restaurants');
         setRestaurants(null);

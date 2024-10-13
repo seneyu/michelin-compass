@@ -3,7 +3,7 @@ import ReviewForm from './ReviewForm';
 
 const ModalUpdate = ({ restaurants, review, onClose, onSubmit }) => {
   const handleUpdateSubmit = (updatedReview) => {
-    onSubmit(review.id, updatedReview);
+    onSubmit(review._id, updatedReview);
     onClose();
   };
 

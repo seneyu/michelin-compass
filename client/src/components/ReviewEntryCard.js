@@ -41,17 +41,16 @@ const ReviewEntryCard = ({
           <p>Restaurant: {review.restaurant}</p>
           <p>Rating: {review.rating}</p>
           <p>Comment: {review.comment}</p>
+          <p>Created At: {review.createdAt}</p>
           <button
             className="other-buttons"
-            onClick={() => handleUpdateClick(review)}
-          >
+            onClick={() => handleUpdateClick(review)}>
             Update
           </button>
           <button
             className="other-buttons"
-            id={review.id}
-            onClick={onClickDelete}
-          >
+            id={review._id}
+            onClick={onClickDelete}>
             Delete
           </button>
         </div>

@@ -51,7 +51,26 @@ const restaurantSchema = new mongoose.Schema({
   },
 });
 
+const reviewSchema = new mongoose.Schema({
+  restaurant: {
+    type: String,
+    required: true,
+  },
+  rating: {
+    type: Number,
+    required: true,
+  },
+  comment: {
+    type: String,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
 const User = mongoose.model('User', userSchema);
 const Restaurant = mongoose.model('Restaurant', restaurantSchema);
+const Review = mongoose.model('Review', reviewSchema);
 
-module.exports = { User, Restaurant };
+module.exports = { User, Restaurant, Review };

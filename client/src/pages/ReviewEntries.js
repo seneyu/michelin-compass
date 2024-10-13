@@ -10,14 +10,18 @@ const ReviewEntries = ({ restaurants }) => {
     const fetchReviews = async () => {
       try {
         // get request for fetching review entries
-        const response = await fetch('http://localhost:3000/reviews');
+        const response = await fetch('/api/reviews');
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
         const data = await response.json();
-        setReviews(data);
+
+        const sortedReviews = data.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setReviews(sortedReviews);
       } catch (error) {
         console.error('An error occurred when fetching data: ', error);
       }
@@ -29,10 +33,10 @@ const ReviewEntries = ({ restaurants }) => {
   // pass a callback to Modal and then ReviewForm to handle the modal closing and refreshing the reviews
   const handleReviewSubmit = async (newReview) => {
     try {
-      const response = await fetch('http://localhost:3000/reviews', {
+      const response = await fetch('/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ newReview }),
+        body: JSON.stringify(newReview),
       });
 
       if (!response.ok) {
@@ -40,13 +44,12 @@ const ReviewEntries = ({ restaurants }) => {
       }
 
       const data = await response.json();
-      // if (response.status === 200) {
       if (data) {
-        const newPost = response.data;
-        // update the state by appending the newPost
-        // react re-renders the components affected by that state change
-        // have newPost listed on top of list
-        setReviews((prevPosts) => [newPost, ...prevPosts]);
+        setReviews((prevReviews) =>
+          [data, ...prevReviews].sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          )
+        );
         setShowAddModal(false);
       }
     } catch (error) {
@@ -56,14 +59,11 @@ const ReviewEntries = ({ restaurants }) => {
 
   const handleUpdate = async (reviewId, updateInfo) => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/reviews/${reviewId}`,
-        {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updateInfo),
-        }
-      );
+      const response = await fetch(`/api/reviews/${reviewId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updateInfo),
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -73,7 +73,7 @@ const ReviewEntries = ({ restaurants }) => {
 
       setReviews((prevReviews) =>
         prevReviews.map((review) =>
-          review.id === updatedPost.id ? updatedPost : review
+          review._id === updatedPost._id ? updatedPost : review
         )
       );
 
@@ -85,10 +85,9 @@ const ReviewEntries = ({ restaurants }) => {
 
   const handleDelete = async (reviewId) => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/reviews/${reviewId}`,
-        { method: 'DELETE' }
-      );
+      const response = await fetch(`/api/reviews/${reviewId}`, {
+        method: 'DELETE',
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -96,11 +95,14 @@ const ReviewEntries = ({ restaurants }) => {
 
       const data = await response.json();
 
-      const updateReviews = reviews.filter(
-        (review) => review.id !== parseInt(reviewId)
-      );
-      setReviews(updateReviews);
-      console.log('Review deleted successfully!');
+      if (data) {
+        setReviews((prevReviews) =>
+          prevReviews.filter((review) => review._id !== data._id)
+        );
+        console.log('Review deleted successfully!');
+      } else {
+        console.error('Deletion was not successful.');
+      }
     } catch (error) {
       console.error('An error occurred when deleting a review post: ', error);
     }

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { Restaurant } = require('./models/projectModel');
+const { Restaurant, Review } = require('./models/projectModel');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -45,8 +45,31 @@ async function main() {
       },
     ];
 
-    const result = await Restaurant.insertMany(Restaurants);
-    console.log('Inserted restaurants: ', result);
+    const Reviews = [
+      {
+        restaurant: 'Localis',
+        rating: 4,
+        comment:
+          "One of the best and most memorable dining experiences I've had in Sacramento! The service was excellent, and the waiters and waitresses were humble, kind, and made us feel comfortable!",
+      },
+      {
+        restaurant: 'Auberge du Soleil',
+        rating: 4,
+        comment:
+          'Beautiful upscale Michelin star restaurant with sweeping views of Napa Valley. The brunch is a good value, and includes a cocktail, bread course, and three food courses... several of which are the same as the ones on the dinner menu.',
+      },
+      {
+        restaurant: 'The French Laundry',
+        rating: 3,
+        comment:
+          'So disappointed by our experience here. Maybe we built it up too much before our trip but the service was just lackluster. I think they have become comfortable being a 3-star.',
+      },
+    ];
+
+    const result1 = await Restaurant.insertMany(Restaurants);
+    const result2 = await Review.insertMany(Reviews);
+    console.log('Inserted result1: ', result1);
+    console.log('Inserted result2: ', result2);
   } catch (error) {
     console.error('Error: ', error);
   } finally {
