@@ -16,15 +16,18 @@ const Signup = () => {
         body: JSON.stringify({ username, password }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        throw new Error(
+          data.message?.err || 'An error occurred during signup.'
+        );
       }
 
-      const data = await response.json();
       console.log('User created: ', data);
       setData(data);
     } catch (error) {
-      alert(`Error: ${error.response.data.message.err}`);
+      alert(`Error: ${error.message}`);
     }
     event.target.elements['username-signup'].value = '';
     event.target.elements['password-signup'].value = '';

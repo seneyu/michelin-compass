@@ -1,6 +1,6 @@
 // const path = require('path');
 const express = require('express');
-const cors = require('cors');
+// const cors = require('cors');
 const userController = require('./controllers/userController');
 const restaurantController = require('./controllers/restaurantController');
 const reviewController = require('./controllers/reviewController');
@@ -13,17 +13,7 @@ const PORT = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.urlencoded({ extended: true }));
-
-// serve static files
-// app.use(express.static(path.resolve(__dirname, '../client/public')));
-// app.use(express.static(path.resolve(__dirname, '../dist')));
-
-// testing get request for '/' route
-app.get('/', (req, res) => {
-  return res.status(200).send('<h1>Hello from Express!</h1>');
-});
 
 app.get(
   '/api/restaurants',
@@ -37,10 +27,7 @@ app.get(
 // signup page
 app.post('/api/signup', userController.createUser, (req, res) => {
   console.log('You successfully post user~~~');
-  res
-    .status(200)
-    .json(res.locals.newUser)
-    .send({ message: 'Account Created!' });
+  res.status(200).json(res.locals.newUser);
 });
 
 // login page

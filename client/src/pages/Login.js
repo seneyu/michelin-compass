@@ -13,8 +13,6 @@ const Login = () => {
     const username = event.target.elements['username-login'].value;
     const password = event.target.elements['password-login'].value;
 
-    // console.log(username, password);
-
     try {
       const response = await fetch('/api/login', {
         method: 'POST',
@@ -22,11 +20,12 @@ const Login = () => {
         body: JSON.stringify({ username, password }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        throw new Error(data.message?.err || 'An error occurred during login.');
       }
 
-      const data = await response.json();
       console.log('User Info: ', data);
       if (data) {
         console.log('data: ', data);
@@ -34,7 +33,7 @@ const Login = () => {
       }
     } catch (error) {
       console.error('An error occurred when logging in a user: ', error);
-      alert(`Error: ${error.response.data.message.err}`);
+      alert(`Error: ${error.message}`);
     }
     event.target.elements['username-login'].value = '';
     event.target.elements['password-login'].value = '';

@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
 dotenv.config();
 
-// // connect to mongodb
+// connect to mongodb
 const URI = process.env.MONGO_URI;
 
 mongoose
@@ -14,12 +15,29 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
+    unique: true,
   },
-  hashpassword: {
+  password: {
     type: String,
     required: true,
   },
 });
+
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password')) return next();
+
+  try {
+    const salt = bcrypt.genSaltSync(10);
+    this.password = bcrypt.hashSync(this.password, salt);
+    return next();
+  } catch (error) {
+    return next(error);
+  }
+});
+
+userSchema.methods.comparePassword = function (password) {
+  return bcrypt.compareSync(password, this.password);
+};
 
 const restaurantSchema = new mongoose.Schema({
   name: {

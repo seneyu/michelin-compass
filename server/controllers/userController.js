@@ -1,5 +1,4 @@
-// const db = require('../models/projectModel');
-const { User, Restaurant } = require('../models/projectModel');
+const { User } = require('../models/projectModel');
 const bcrypt = require('bcrypt');
 
 const userController = {};
@@ -19,24 +18,21 @@ userController.createUser = async (req, res, next) => {
 
   // hash password using bcrypt and save to database
   try {
-    const text1 = `SELECT * FROM users WHERE username = $1`;
-    const result1 = await db.query(text1, [username]);
-    if (result1.rows.length === 0) {
-      const hashPassword = await bcrypt.hash(password, 10);
-      const text2 = `INSERT INTO users (username, hashpassword)
-      VALUES ($1, $2)
-      RETURNING *`;
-      const params = [username, hashPassword];
-      const result2 = await db.query(text2, params);
-      res.locals.newUser = result2.rows[0];
-      return next();
-    } else {
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      console.log('existingUser: ', existingUser);
       return next({
-        log: 'Error in userController.verifyUser middleware.',
-        status: 500,
-        message: { err: 'Username already exists.' },
+        log: 'Error in userController.createUser middleware.',
+        status: 400,
+        message: { err: 'Username is taken.' },
       });
     }
+
+    const newUser = await User.create({ username, password });
+    console.log('newUser: ', newUser);
+
+    res.locals.newUser = newUser;
+    return next();
   } catch (err) {
     console.error(err);
     return next({
@@ -61,11 +57,10 @@ userController.verifyUser = async (req, res, next) => {
 
   // check if username exists in database
   try {
-    const text = `SELECT * FROM users WHERE username = $1`;
-    const result = await db.query(text, [username]);
+    const foundUser = await User.findOne({ username });
 
     // if no user found, return error
-    if (result.rows.length === 0) {
+    if (!foundUser) {
       return next({
         log: 'Error in userController.verifyUser middleware.',
         status: 404,
@@ -73,10 +68,8 @@ userController.verifyUser = async (req, res, next) => {
       });
     }
 
-    const user = result.rows[0];
-
-    // compare the hashpassword from database with the input password
-    const passwordMatch = await bcrypt.compare(password, user.hashpassword);
+    // use the comparePassword method from the user schema
+    const passwordMatch = await foundUser.comparePassword(password);
 
     if (!passwordMatch) {
       return next({
@@ -86,7 +79,7 @@ userController.verifyUser = async (req, res, next) => {
       });
     }
 
-    res.locals.user = user;
+    res.locals.user = foundUser;
     return next();
   } catch (err) {
     console.error(err);
