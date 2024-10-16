@@ -1,8 +1,13 @@
 import React from 'react';
 import Details from './Details';
+import { Restaurant } from '../types/interface';
+
+interface Props {
+  restaurant: Restaurant;
+}
 
 // passing in the restaurant prop
-const RestaurantCard = ({ restaurant }) => {
+const RestaurantCard: React.FC<Props> = ({ restaurant }) => {
   let totalStars = [];
 
   // render star icons
@@ -31,8 +36,7 @@ const RestaurantCard = ({ restaurant }) => {
       <Details restaurant={restaurant} />
       <button
         className="other-buttons"
-        onClick={() => window.open(restaurant.website)}
-      >
+        onClick={() => window.open(restaurant.website)}>
         Website
       </button>
     </div>

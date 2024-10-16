@@ -18,7 +18,7 @@ reviewController.getReviews = async (req, res, next) => {
 
 reviewController.postReview = async (req, res, next) => {
   const { restaurant, rating, comment } = req.body;
-  //   console.log('req.body: ', req.body);
+  // console.log('req.body: ', req.body);
 
   if (!restaurant || !rating) {
     return next({

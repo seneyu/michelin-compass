@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ReviewForm from './ReviewForm';
+import { Restaurant, ReviewFormData } from '../types/interface';
 
-const Writereview = ({ restaurants }) => {
-  const handleSubmit = (newReview) => {
+interface Props {
+  restaurants: Restaurant[];
+}
+
+const Writereview: React.FC<Props> = ({ restaurants }) => {
+  const handleSubmit = (newReview: ReviewFormData) => {
     console.log('New Review Submitted: ', newReview);
   };
 

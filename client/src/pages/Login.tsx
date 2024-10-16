@@ -1,17 +1,21 @@
-// use useAuth hook to handle user authentication
-
 import React, { useState } from 'react';
+import { User } from '../types/interface';
 
 const Login = () => {
-  const [data, setData] = useState('');
+  const [data, setData] = useState<User | null>(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = async (event) => {
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const username = event.target.elements['username-login'].value;
-    const password = event.target.elements['password-login'].value;
+    const form = event.currentTarget;
+    const username = (
+      form.elements.namedItem('username-login') as HTMLInputElement
+    ).value;
+    const password = (
+      form.elements.namedItem('password-login') as HTMLInputElement
+    ).value;
 
     try {
       const response = await fetch('/api/login', {
@@ -32,11 +36,12 @@ const Login = () => {
         setData(data);
       }
     } catch (error) {
+      if (error instanceof Error) {
+        alert(`Error: ${error.message}`);
+      }
       console.error('An error occurred when logging in a user: ', error);
-      alert(`Error: ${error.message}`);
     }
-    event.target.elements['username-login'].value = '';
-    event.target.elements['password-login'].value = '';
+    form.reset();
   };
 
   return (

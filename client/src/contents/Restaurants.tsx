@@ -1,9 +1,15 @@
-import React from 'react';
-
-// components
 import RestaurantCard from '../components/RestaurantCard';
+import { Restaurant } from '../types/interface';
 
-const Restaurants = ({ restaurants, fetchError }) => {
+interface RestaurantsProps {
+  restaurants: Restaurant[];
+  fetchError: string;
+}
+
+const Restaurants: React.FC<RestaurantsProps> = ({
+  restaurants,
+  fetchError,
+}) => {
   return (
     <div className="">
       {fetchError && <p>{fetchError}</p>}

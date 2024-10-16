@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react';
-// import supabase from './config/supabaseClient';
+import { useEffect, useState } from 'react';
 // import { APIProvider, Map } from '@vis.gl/react-google-maps';
 import Nav from './contents/Nav';
 import Restaurants from './contents/Restaurants';
-import MyGoogleMap from './contents/GoogleMap';
+// import MyGoogleMap from './contents/GoogleMap';
 import { Routes, Route } from 'react-router-dom';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import WriteReview from './pages/WriteReview';
 import ReviewEntries from './pages/ReviewEntries';
+import { Restaurant } from './types/interface';
 // const API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
 const App = () => {
-  const [fetchError, setFetchError] = useState(null);
-  const [restaurants, setRestaurants] = useState(null);
+  const [fetchError, setFetchError] = useState<string>('');
+  const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
 
   // useEffect runs after a component's initial render and when the values of its arugments change
   useEffect(() => {
@@ -29,7 +29,7 @@ const App = () => {
         setRestaurants(data);
       } catch (error) {
         setFetchError('Could not fetch the restaurants');
-        setRestaurants(null);
+        setRestaurants([]);
         console.error('Fetch error: ', error);
       }
     };
@@ -46,7 +46,7 @@ const App = () => {
           element={
             <div className="content">
               <Restaurants restaurants={restaurants} fetchError={fetchError} />
-              <MyGoogleMap />
+              {/* <MyGoogleMap /> */}
             </div>
           }
         />

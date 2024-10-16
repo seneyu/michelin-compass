@@ -1,8 +1,20 @@
-import React from 'react';
 import ReviewForm from './ReviewForm';
+import { Restaurant, Review, ReviewFormData } from '../types/interface';
 
-const ModalUpdate = ({ restaurants, review, onClose, onSubmit }) => {
-  const handleUpdateSubmit = (updatedReview) => {
+interface ModalProps {
+  restaurants: Restaurant[];
+  review: Review;
+  onClose: () => void;
+  onSubmit: (reviewId: number, updatedReview: ReviewFormData) => void;
+}
+
+const ModalUpdate: React.FC<ModalProps> = ({
+  restaurants,
+  review,
+  onClose,
+  onSubmit,
+}) => {
+  const handleUpdateSubmit = (updatedReview: ReviewFormData) => {
     onSubmit(review._id, updatedReview);
     onClose();
   };

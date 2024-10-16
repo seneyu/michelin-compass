@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
+import { User } from '../types/interface';
 
 const Signup = () => {
-  const [data, setData] = useState('');
+  const [data, setData] = useState<User | null>(null);
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const username = event.target.elements['username-signup'].value;
-    const password = event.target.elements['password-signup'].value;
+    const form = event.currentTarget;
+    const username = (
+      form.elements.namedItem('username-signup') as HTMLInputElement
+    ).value;
+    const password = (
+      form.elements.namedItem('password-signup') as HTMLInputElement
+    ).value;
 
     try {
       const response = await fetch('/api/signup', {
@@ -27,10 +33,13 @@ const Signup = () => {
       console.log('User created: ', data);
       setData(data);
     } catch (error) {
-      alert(`Error: ${error.message}`);
+      if (error instanceof Error) {
+        alert(`Error: ${error.message}`);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
-    event.target.elements['username-signup'].value = '';
-    event.target.elements['password-signup'].value = '';
+    form.reset();
   };
 
   return (

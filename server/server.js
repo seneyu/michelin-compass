@@ -1,14 +1,11 @@
 // const path = require('path');
 const express = require('express');
-// const cors = require('cors');
 const userController = require('./controllers/userController');
 const restaurantController = require('./controllers/restaurantController');
 const reviewController = require('./controllers/reviewController');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// app.use(cors());
 
 const bodyParser = require('body-parser');
 

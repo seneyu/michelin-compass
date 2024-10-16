@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { Restaurant, Review, ReviewFormData } from '../types/interface';
 import ReviewEntryCard from '../components/ReviewEntryCard';
 import Modal from './Modal';
 
-const ReviewEntries = ({ restaurants }) => {
-  const [reviews, setReviews] = useState([]);
+interface Props {
+  restaurants: Restaurant[];
+}
+
+const ReviewEntries: React.FC<Props> = ({ restaurants }) => {
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
 
   useEffect(() => {
@@ -16,10 +21,11 @@ const ReviewEntries = ({ restaurants }) => {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        const data = await response.json();
+        const data: Review[] = await response.json();
 
         const sortedReviews = data.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
         setReviews(sortedReviews);
       } catch (error) {
@@ -31,7 +37,7 @@ const ReviewEntries = ({ restaurants }) => {
   }, []);
 
   // pass a callback to Modal and then ReviewForm to handle the modal closing and refreshing the reviews
-  const handleReviewSubmit = async (newReview) => {
+  const handleReviewSubmit = async (newReview: ReviewFormData) => {
     try {
       const response = await fetch('/api/reviews', {
         method: 'POST',
@@ -47,7 +53,8 @@ const ReviewEntries = ({ restaurants }) => {
       if (data) {
         setReviews((prevReviews) =>
           [data, ...prevReviews].sort(
-            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           )
         );
         setShowAddModal(false);
@@ -57,7 +64,7 @@ const ReviewEntries = ({ restaurants }) => {
     }
   };
 
-  const handleUpdate = async (reviewId, updateInfo) => {
+  const handleUpdate = async (reviewId: number, updateInfo: ReviewFormData) => {
     try {
       const response = await fetch(`/api/reviews/${reviewId}`, {
         method: 'PUT',
@@ -83,7 +90,7 @@ const ReviewEntries = ({ restaurants }) => {
     }
   };
 
-  const handleDelete = async (reviewId) => {
+  const handleDelete = async (reviewId: number) => {
     try {
       const response = await fetch(`/api/reviews/${reviewId}`, {
         method: 'DELETE',
@@ -95,14 +102,10 @@ const ReviewEntries = ({ restaurants }) => {
 
       const data = await response.json();
 
-      if (data) {
-        setReviews((prevReviews) =>
-          prevReviews.filter((review) => review._id !== data._id)
-        );
-        console.log('Review deleted successfully!');
-      } else {
-        console.error('Deletion was not successful.');
-      }
+      setReviews((prevReviews) =>
+        prevReviews.map((review) => (review._id === data._id ? data : review))
+      );
+      console.log('Review deleted successfully!');
     } catch (error) {
       console.error('An error occurred when deleting a review post: ', error);
     }

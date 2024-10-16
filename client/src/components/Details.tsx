@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Collapse from 'react-bootstrap/Collapse';
+import { Restaurant } from '../types/interface';
 
-const Details = ({ restaurant }) => {
+interface RestaurantProps {
+  restaurant: Restaurant;
+}
+
+const Details: React.FC<RestaurantProps> = ({ restaurant }) => {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -10,8 +15,7 @@ const Details = ({ restaurant }) => {
         onClick={() => setOpen(!open)}
         aria-controls="example-collapse-text"
         aria-expanded={open}
-        className="other-buttons"
-      >
+        className="other-buttons">
         Details
       </button>{' '}
       <Collapse in={open}>
