@@ -1,14 +1,14 @@
-const mongoose = require('mongoose');
-const { Restaurant, Review } = require('./models/projectModel');
-const dotenv = require('dotenv');
+import mongoose from 'mongoose';
+import { Restaurant, Review } from './models/db';
+import dotenv from 'dotenv';
 dotenv.config();
 
-const URI = process.env.MONGO_URI;
+const URI = process.env.MONGO_URI as string;
 
 async function main() {
   try {
     await mongoose
-      .connect(URI, { useNewUrlParser: true, useUnifiedTopology: true })
+      .connect(URI)
       .then(() => console.log('Connected to MongoDB...'))
       .catch((err) => console.error('MongoDB connection error: ', err));
 
@@ -77,4 +77,4 @@ async function main() {
   }
 }
 
-// main();
+main();

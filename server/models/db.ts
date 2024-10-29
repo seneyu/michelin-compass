@@ -1,17 +1,43 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const dotenv = require('dotenv');
+import mongoose, { Document } from 'mongoose';
+import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
 dotenv.config();
 
+// interfaces
+interface IUser extends Document {
+  username: string;
+  password: string;
+  comparePassword(cadidatePassword: string): boolean;
+}
+
+interface IRestaurant extends Document {
+  name: string;
+  address: string;
+  cuisine?: string;
+  distinction: number;
+  description?: string;
+  website?: string;
+  number?: string;
+  green?: number;
+}
+
+interface IReview extends Document {
+  restaurant: string;
+  rating: number;
+  comment?: string;
+  createdAt: Date;
+}
+
 // connect to mongodb
-const URI = process.env.MONGO_URI;
+const URI = process.env.MONGO_URI as string;
 
 mongoose
-  .connect(URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(URI)
   .then(() => console.log('Connected to MongoDB...'))
   .catch((err) => console.error('MongoDB connection error: ', err));
 
-const userSchema = new mongoose.Schema({
+// Schemas
+const userSchema = new mongoose.Schema<IUser>({
   username: {
     type: String,
     required: true,
@@ -31,15 +57,15 @@ userSchema.pre('save', function (next) {
     this.password = bcrypt.hashSync(this.password, salt);
     return next();
   } catch (error) {
-    return next(error);
+    return next(error as Error);
   }
 });
 
-userSchema.methods.comparePassword = function (password) {
+userSchema.methods.comparePassword = function (password: string) {
   return bcrypt.compareSync(password, this.password);
 };
 
-const restaurantSchema = new mongoose.Schema({
+const restaurantSchema = new mongoose.Schema<IRestaurant>({
   name: {
     type: String,
     required: true,
@@ -69,7 +95,7 @@ const restaurantSchema = new mongoose.Schema({
   },
 });
 
-const reviewSchema = new mongoose.Schema({
+const reviewSchema = new mongoose.Schema<IReview>({
   restaurant: {
     type: String,
     required: true,
@@ -91,4 +117,4 @@ const User = mongoose.model('User', userSchema);
 const Restaurant = mongoose.model('Restaurant', restaurantSchema);
 const Review = mongoose.model('Review', reviewSchema);
 
-module.exports = { User, Restaurant, Review };
+export { User, Restaurant, Review };
