@@ -32,10 +32,10 @@ const userController: UserController = {
         });
       }
 
-      const newUser = await User.create({ username, password });
-      console.log('newUser: ', newUser);
+      const user = await User.create({ username, password });
+      console.log('user: ', user);
 
-      res.locals.newUser = newUser;
+      res.locals.user = user;
       return next();
     } catch (err) {
       console.error(err);

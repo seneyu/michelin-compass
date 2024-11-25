@@ -1,6 +1,13 @@
+export interface ApiResponse {
+  user: User;
+  token: string;
+}
+
 // structure of a User
 export interface User {
+  _id: string;
   username: string;
+  password?: string;
 }
 
 // structure of a restaurant

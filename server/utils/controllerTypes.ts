@@ -15,3 +15,7 @@ export interface ReviewController {
   updatePost: (req: Request, res: Response, next: NextFunction) => void;
   deletePost: (req: Request, res: Response, next: NextFunction) => void;
 }
+
+export interface TokenController {
+  generateToken: (req: Request, res: Response, next: NextFunction) => void;
+}

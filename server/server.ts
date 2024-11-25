@@ -7,7 +7,9 @@ import {
 import userController from './controllers/userController';
 import restaurantController from './controllers/restaurantController';
 import reviewController from './controllers/reviewController';
+import tokenController from './controllers/tokenController';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 
 const typedRestaurantController = restaurantController as RestaurantController;
 const typedUserController = userController as UserController;
@@ -16,6 +18,7 @@ const typedReviewController = reviewController as ReviewController;
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -32,8 +35,9 @@ app.get(
 app.post(
   '/api/signup',
   typedUserController.createUser,
+  tokenController.generateToken,
   (_req: Request, res: Response) => {
-    res.status(200).json(res.locals.newUser);
+    res.status(200).json({ user: res.locals.user, token: res.locals.token });
   }
 );
 
@@ -41,8 +45,9 @@ app.post(
 app.post(
   '/api/login',
   typedUserController.verifyUser,
+  tokenController.generateToken,
   (_req: Request, res: Response) => {
-    res.status(200).json(res.locals.user);
+    res.status(200).json({ user: res.locals.user, token: res.locals.token });
   }
 );
 

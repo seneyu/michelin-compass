@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { User } from '../types/interface';
+import { ApiResponse } from '../types/interface';
 
 const Login = () => {
-  const [data, setData] = useState<User | null>(null);
+  const [data, setData] = useState<ApiResponse | null>(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -10,12 +10,6 @@ const Login = () => {
     event.preventDefault();
 
     const form = event.currentTarget;
-    const username = (
-      form.elements.namedItem('username-login') as HTMLInputElement
-    ).value;
-    const password = (
-      form.elements.namedItem('password-login') as HTMLInputElement
-    ).value;
 
     try {
       const response = await fetch('/api/login', {
@@ -24,17 +18,15 @@ const Login = () => {
         body: JSON.stringify({ username, password }),
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data.message?.err || 'An error occurred during login.');
+        const errorData = await response.json();
+        throw new Error(errorData.err || 'An error occurred during login.');
       }
 
+      const data = await response.json();
       console.log('User Info: ', data);
-      if (data) {
-        console.log('data: ', data);
-        setData(data);
-      }
+
+      setData(data);
     } catch (error) {
       if (error instanceof Error) {
         alert(`Error: ${error.message}`);
@@ -73,13 +65,13 @@ const Login = () => {
         </label>
         <br />
         <br />
-        <button className="submit-buttons" type="submit" value="Login User">
+        <button className="submit-buttons" type="submit">
           Login User
         </button>
       </form>
       <div>
         <br></br>
-        <h2>{data ? <p>Welcome Back, {data.username}!</p> : <p></p>}</h2>
+        {data && data.user && <h2>Welcome Back, {data.user.username}!</h2>}
       </div>
     </div>
   );
