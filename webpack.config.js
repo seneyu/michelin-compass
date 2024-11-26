@@ -11,7 +11,7 @@ module.exports = (env, argv) => {
     mode: isProduction ? 'production' : 'development',
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: isProduction ? '[name].[contenthash].js' : 'bundle.js',
+      filename: isProduction ? '[name].[contenthash].js' : '[name].bundle.js',
       publicPath: '/',
       clean: true,
     },
@@ -43,11 +43,6 @@ module.exports = (env, argv) => {
         },
       ],
     },
-    // module resolution configuration
-    // resolve: {
-    //   extensions: ['.js', '.js'],
-    //   modules: [path.resolve(__dirname, 'client/src'), 'node_modules'],
-    // },
     resolve: {
       extensions: ['.tsx', '.ts', '.js'],
       modules: [path.resolve(__dirname, 'client/src'), 'node_modules'],
@@ -66,6 +61,9 @@ module.exports = (env, argv) => {
       new Dotenv(),
     ],
     optimization: {
+      splitChunks: {
+        chunks: 'all',
+      },
       minimize: isProduction,
     },
     devtool: isProduction ? 'source-map' : 'eval-source-map',

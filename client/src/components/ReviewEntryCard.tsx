@@ -35,23 +35,25 @@ const ReviewEntryCard: React.FC<ReviewEntryCardProps> = ({
   };
 
   return (
-    <div>
+    <div className="reviewCards">
       {reviews.map((review) => (
         <div key={review._id} className="review">
           <p>Restaurant: {review.restaurant}</p>
           <p>Rating: {review.rating}</p>
           <p>Comment: {review.comment}</p>
           <p>Created At: {review.createdAt}</p>
-          <button
-            className="other-buttons"
-            onClick={() => handleUpdateClick(review)}>
-            Update
-          </button>
-          <button
-            className="other-buttons"
-            onClick={() => handleDelete(review._id)}>
-            Delete
-          </button>
+          <div>
+            <button
+              className="other-buttons"
+              onClick={() => handleUpdateClick(review)}>
+              Update
+            </button>
+            <button
+              className="other-buttons"
+              onClick={() => handleDelete(review._id)}>
+              Delete
+            </button>
+          </div>
         </div>
       ))}
       {showUpdateModal && currentReview && (
