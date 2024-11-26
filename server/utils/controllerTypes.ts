@@ -1,4 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
+import { JwtPayload } from 'jsonwebtoken';
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: JwtPayload;
+    }
+  }
+}
+
+export interface UserPayload {
+  username: string;
+}
 
 export interface RestaurantController {
   getRestaurants: (req: Request, res: Response, next: NextFunction) => void;
@@ -18,4 +31,5 @@ export interface ReviewController {
 
 export interface TokenController {
   generateToken: (req: Request, res: Response, next: NextFunction) => void;
+  authenticateToken: (req: Request, res: Response, next: NextFunction) => void;
 }

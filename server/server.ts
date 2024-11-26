@@ -10,6 +10,7 @@ import reviewController from './controllers/reviewController';
 import tokenController from './controllers/tokenController';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 const typedRestaurantController = restaurantController as RestaurantController;
 const typedUserController = userController as UserController;
@@ -19,6 +20,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -63,6 +65,7 @@ app.get(
 
 app.post(
   '/api/reviews',
+  tokenController.authenticateToken,
   typedReviewController.postReview,
   (_req: Request, res: Response) => {
     res.status(200).json(res.locals.newPost);
@@ -71,6 +74,7 @@ app.post(
 
 app.put(
   '/api/reviews/:id',
+  tokenController.authenticateToken,
   typedReviewController.updatePost,
   (_req: Request, res: Response) => {
     res.status(200).json(res.locals.updatedPost);
@@ -79,6 +83,7 @@ app.put(
 
 app.delete(
   '/api/reviews/:id',
+  tokenController.authenticateToken,
   typedReviewController.deletePost,
   (_req: Request, res: Response) => {
     res.status(200).json(res.locals.deletedPost);

@@ -41,11 +41,14 @@ const ReviewEntries: React.FC<Props> = ({ restaurants }) => {
     try {
       const response = await fetch('/api/reviews', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(newReview),
       });
 
       if (!response.ok) {
+        alert('Please login.');
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
@@ -73,6 +76,7 @@ const ReviewEntries: React.FC<Props> = ({ restaurants }) => {
       });
 
       if (!response.ok) {
+        alert('Please login.');
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
@@ -97,6 +101,7 @@ const ReviewEntries: React.FC<Props> = ({ restaurants }) => {
       });
 
       if (!response.ok) {
+        alert('Please login.');
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
