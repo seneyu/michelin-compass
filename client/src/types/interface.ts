@@ -1,3 +1,19 @@
+// declare 'google' namespace
+declare global {
+  interface Window {
+    google?: {
+      maps: {
+        Map: any;
+        Marker: any;
+      };
+    };
+  }
+}
+
+export interface MyGoogleMapProps {
+  restaurants: Restaurant[];
+}
+
 export interface ApiResponse {
   user: User;
   token: string;
@@ -20,6 +36,9 @@ export interface Restaurant {
   description: string;
   website: string;
   number: string;
+  green?: number;
+  latitude?: number | string;
+  longitude?: number | string;
 }
 
 // structure of a review

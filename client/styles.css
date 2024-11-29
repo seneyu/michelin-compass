@@ -20,8 +20,8 @@ body {
   background: #f2f2f2;
 }
 
-.myMap {
-  height: calc(var(--vh, 1vh) * 100);
+.map-container {
+  height: 80vh;
   width: 45rem;
   position: sticky;
   top: 2rem;
@@ -216,10 +216,6 @@ select {
   /* #search-button {
     height: 2rem;
   } */
-
-  .myMap {
-    display: none;
-  }
 
   @media screen and (max-width: 600px) {
     .review {

@@ -53,11 +53,11 @@ module.exports = (env, argv) => {
         template: './client/public/index.html',
         inject: true,
       }),
-      new webpack.DefinePlugin({
-        'process.env.GOOGLE_MAPS_API_KEY': JSON.stringify(
-          process.env.GOOGLE_MAPS_API_KEY
-        ),
-      }),
+      // new webpack.DefinePlugin({
+      //   'process.env.GOOGLE_MAPS_API_KEY': JSON.stringify(
+      //     process.env.GOOGLE_MAPS_API_KEY
+      //   ),
+      // }),
       new Dotenv(),
     ],
     optimization: {
