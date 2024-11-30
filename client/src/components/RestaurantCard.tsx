@@ -4,10 +4,11 @@ import { Restaurant } from '../types/interface';
 
 interface Props {
   restaurant: Restaurant;
+  onRestaurantClick: (lat: string, lng: string) => void;
 }
 
 // passing in the restaurant prop
-const RestaurantCard: React.FC<Props> = ({ restaurant }) => {
+const RestaurantCard: React.FC<Props> = ({ restaurant, onRestaurantClick }) => {
   let totalStars = [];
 
   // render star icons
@@ -24,7 +25,10 @@ const RestaurantCard: React.FC<Props> = ({ restaurant }) => {
 
   return (
     <div className="restaurant-card">
-      <h4>
+      <h4
+        onClick={() =>
+          onRestaurantClick(restaurant.latitude, restaurant.longitude)
+        }>
         <b>
           <span>{totalStars}</span>
           <br></br>
@@ -33,12 +37,13 @@ const RestaurantCard: React.FC<Props> = ({ restaurant }) => {
       </h4>
       <p>{restaurant.address}</p>
       <p>{restaurant.cuisine}</p>
+      <br />
+      <a onClick={() => window.open(restaurant.website)}>
+        Visit Official Website
+      </a>
+      <br />
+      <br />
       <Details restaurant={restaurant} />
-      <button
-        className="other-buttons"
-        onClick={() => window.open(restaurant.website)}>
-        Website
-      </button>
     </div>
   );
 };

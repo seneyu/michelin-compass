@@ -37,8 +37,8 @@ export interface Restaurant {
   website: string;
   number: string;
   green?: number;
-  latitude?: number | string;
-  longitude?: number | string;
+  latitude: string;
+  longitude: string;
 }
 
 // structure of a review

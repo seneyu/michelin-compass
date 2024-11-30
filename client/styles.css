@@ -21,7 +21,7 @@ body {
 }
 
 .map-container {
-  height: 80vh;
+  height: 90vh;
   width: 45rem;
   position: sticky;
   top: 2rem;
@@ -64,9 +64,10 @@ body {
   margin-right: 0.2rem;
 }
 
-/* .collapse-text {
-  min-width: 30rem;
-} */
+a:hover,
+button:hover {
+  cursor: pointer;
+}
 
 .nav-bar {
   display: flex;

@@ -19,6 +19,8 @@ interface IRestaurant extends Document {
   website?: string;
   number?: string;
   green?: number;
+  latitude?: string;
+  longitude?: string;
 }
 
 interface IReview extends Document {
