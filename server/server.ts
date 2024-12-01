@@ -90,6 +90,8 @@ app.delete(
   }
 );
 
+app.post('/api/logout', tokenController.removeToken);
+
 // catch-all error handler to handle unknown routes
 app.get('*', (_req: Request, res: Response) => {
   res.sendStatus(404);

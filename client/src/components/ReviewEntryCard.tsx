@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ModalUpdate from '../pages/ModalUpdate';
+import ModalUpdate from './ModalUpdate';
 import { Restaurant, Review, ReviewFormData } from '../types/interface';
 
 interface ReviewEntryCardProps {

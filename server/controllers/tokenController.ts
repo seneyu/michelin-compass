@@ -123,6 +123,35 @@ const tokenController: TokenController = {
       }
     }
   },
+
+  removeToken: async (
+    _req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      // clear the access token cookie
+      res.clearCookie('token', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+      });
+
+      // clear the refresh token cookie
+      res.clearCookie('refreshToken', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+      });
+
+      res.status(200).json({ message: 'Successfully logged out.' });
+    } catch (error) {
+      console.error('Error removing token: ', error);
+      return next({
+        log: 'Error in tokenController.removeToken middleware.',
+        status: 500,
+        message: { err: 'An error occurred in removing token.' },
+      });
+    }
+  },
 };
 
 export default tokenController;

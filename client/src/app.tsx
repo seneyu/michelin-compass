@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import Nav from './contents/Nav';
-import Restaurants from './contents/Restaurants';
+import Nav from './components/Nav';
+import Restaurants from './components/Restaurants';
 import { Routes, Route } from 'react-router-dom';
-import Signup from './pages/Signup';
-import Login from './pages/Login';
-import WriteReview from './pages/WriteReview';
-import ReviewEntries from './pages/ReviewEntries';
+import Signup from './components/Signup';
+import Login from './components/Login';
+import WriteReview from './components/WriteReview';
+import ReviewEntries from './components/ReviewEntries';
 import { Restaurant } from './types/interface';
 import {
   APIProvider,
@@ -22,6 +22,7 @@ const App = () => {
     lat: 38.5789380221926,
     lng: -121.50225113309448,
   });
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   const MapAPIKey = process.env.GOOGLE_MAPS_API_KEY;
 
@@ -65,9 +66,34 @@ const App = () => {
     setMapCenter({ lat: parseFloat(lat), lng: parseFloat(lng) });
   };
 
+  // handle user login
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
+  // handle user logout
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('/api/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        setIsAuthenticated(false);
+        console.log('User logged out successfully');
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(`Error: ${error.message}`);
+      }
+      console.error('An error occurred when logging out user: ', error);
+    }
+  };
+
   return (
     <div className="main">
-      <Nav />
+      <Nav isAuthenticated={isAuthenticated} onLogout={handleLogout} />
       <Routes>
         <Route
           path="/"
@@ -107,7 +133,7 @@ const App = () => {
             </div>
           }
         />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login onLogin={handleLogin} />} />
         <Route path="/signup" element={<Signup />} />
         <Route
           path="/entries"

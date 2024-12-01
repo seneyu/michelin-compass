@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Restaurant, Review, ReviewFormData } from '../types/interface';
-import ReviewEntryCard from '../components/ReviewEntryCard';
+import ReviewEntryCard from './ReviewEntryCard';
 import Modal from './Modal';
 
 interface Props {

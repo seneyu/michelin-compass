@@ -1,4 +1,4 @@
-import RestaurantCard from '../components/RestaurantCard';
+import RestaurantCard from './RestaurantCard';
 import { Restaurant } from '../types/interface';
 
 interface RestaurantsProps {

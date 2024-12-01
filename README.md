@@ -1,4 +1,4 @@
-# solo-project
+# Michelin Compass
 
 An application for reviewing Michelin-starred restaurants, allowing users to view listed restaurants on a map, leave reviews, and manage their content securely.
 
@@ -11,7 +11,7 @@ An application for reviewing Michelin-starred restaurants, allowing users to vie
 ## Tech Stack
 
 - Language: JavaScript, TypeScript
-- Front-End: React, Tailwind CSS
+- Front-End: React
 - Back-End: Node.js, Express.js
 - Database: MongoDB
 - APIs: Google Maps
@@ -45,4 +45,4 @@ npm install
 npm run start
 ```
 
-6. Open your browser and navigate to `http://localhost:3000`.
+6. Open your browser and navigate to `http://localhost:8080`.

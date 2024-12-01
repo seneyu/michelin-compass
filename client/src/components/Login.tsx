@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { ApiResponse } from '../types/interface';
 
-const Login = () => {
+interface LoginProps {
+  onLogin: () => void;
+}
+
+const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [data, setData] = useState<ApiResponse | null>(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -27,6 +31,8 @@ const Login = () => {
       console.log('User Info: ', data);
 
       setData(data);
+
+      onLogin();
     } catch (error) {
       if (error instanceof Error) {
         alert(`Error: ${error.message}`);

@@ -32,4 +32,5 @@ export interface ReviewController {
 export interface TokenController {
   generateToken: (req: Request, res: Response, next: NextFunction) => void;
   authenticateToken: (req: Request, res: Response, next: NextFunction) => void;
+  removeToken: (req: Request, res: Response, next: NextFunction) => void;
 }
