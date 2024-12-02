@@ -33,10 +33,24 @@ interface IReview extends Document {
 // connect to mongodb
 const URI = process.env.MONGO_URI as string;
 
+if (!URL) {
+  console.error('MONGO_URI is not defined in environment variables');
+  throw new Error('MONGO_URI is required');
+}
+
 mongoose
-  .connect(URI)
+  .connect(URI, {
+    serverSelectionTimeoutMS: 5000,
+  })
   .then(() => console.log('Connected to MongoDB...'))
-  .catch((err) => console.error('MongoDB connection error: ', err));
+  .catch((error) => {
+    console.error('MongoDB connection error: ', {
+      error: error.message,
+      code: error.code,
+      uri: URI.replace(/mongodb\+srv:\/\/.*@/, 'mongodb+srv://[hidden]@'),
+    });
+    throw error;
+  });
 
 // Schemas
 const userSchema = new mongoose.Schema<IUser>({
