@@ -71,6 +71,7 @@ const ReviewEntries: React.FC<Props> = ({ restaurants }) => {
     try {
       const response = await fetch(`/api/reviews/${reviewId}`, {
         method: 'PUT',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updateInfo),
       });
@@ -98,6 +99,10 @@ const ReviewEntries: React.FC<Props> = ({ restaurants }) => {
     try {
       const response = await fetch(`/api/reviews/${reviewId}`, {
         method: 'DELETE',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
 
       if (!response.ok) {
@@ -105,10 +110,8 @@ const ReviewEntries: React.FC<Props> = ({ restaurants }) => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-      const data = await response.json();
-
       setReviews((prevReviews) =>
-        prevReviews.map((review) => (review._id === data._id ? data : review))
+        prevReviews.filter((review) => review._id !== reviewId)
       );
       console.log('Review deleted successfully!');
     } catch (error) {

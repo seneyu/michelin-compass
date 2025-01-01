@@ -11,6 +11,7 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
+  overflow: hidden;
 }
 
 body {
@@ -29,8 +30,6 @@ body {
 
 .main {
   background-color: #12bca262;
-  min-height: 100vh;
-  height: auto !important;
   overflow: auto;
 }
 
@@ -39,6 +38,8 @@ body {
   justify-content: center;
   gap: 1.3rem;
   margin: 0 1rem;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .restaurant-grid {

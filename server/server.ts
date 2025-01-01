@@ -90,6 +90,14 @@ app.delete(
   }
 );
 
+app.get(
+  '/api/check-auth',
+  tokenController.authenticateToken,
+  (_req: Request, res: Response) => {
+    res.status(200).json({ authenticated: true });
+  }
+);
+
 app.post('/api/logout', tokenController.removeToken);
 
 // catch-all error handler to handle unknown routes

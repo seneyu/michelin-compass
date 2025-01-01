@@ -12,6 +12,7 @@ import {
   Map,
   MapCameraChangedEvent,
   Marker,
+  InfoWindow,
 } from '@vis.gl/react-google-maps';
 
 const App = () => {
@@ -23,6 +24,7 @@ const App = () => {
     lng: -121.50225113309448,
   });
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [selectedMarker, setSelectedMarker] = useState<Restaurant | null>(null);
 
   const MapAPIKey = process.env.GOOGLE_MAPS_API_KEY;
 
@@ -48,6 +50,28 @@ const App = () => {
     fetchRestaurants();
   }, []);
 
+  // check auth status on app load
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const response = await fetch('/api/check-auth', {
+          credentials: 'include',
+        });
+
+        if (response.ok) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        console.error('Error checking authentication status:', error);
+        setIsAuthenticated(false);
+      }
+    };
+
+    checkAuthStatus();
+  }, []);
+
   // create markers based on fetched restaurants
   useEffect(() => {
     if (restaurants.length > 0) {
@@ -57,6 +81,7 @@ const App = () => {
           lng: parseFloat(restaurant.longitude),
         },
         key: restaurant.name,
+        restaurant: restaurant,
       }));
       setMarkers(newMarkers);
     }
@@ -64,6 +89,14 @@ const App = () => {
 
   const handleRestaurantClick = (lat: string, lng: string) => {
     setMapCenter({ lat: parseFloat(lat), lng: parseFloat(lng) });
+  };
+
+  const handleMarkerClick = (restaurant: Restaurant) => {
+    setSelectedMarker(restaurant);
+  };
+
+  const handleWindowClose = () => {
+    setSelectedMarker(null);
   };
 
   // handle user login
@@ -111,7 +144,7 @@ const App = () => {
                   <Map
                     className="map-container"
                     defaultZoom={13}
-                    center={mapCenter}
+                    defaultCenter={mapCenter}
                     onCameraChanged={(ev: MapCameraChangedEvent) =>
                       console.log(
                         'camera changed:',
@@ -125,8 +158,22 @@ const App = () => {
                         key={index}
                         position={marker.position}
                         title={marker.key}
+                        onClick={() => handleMarkerClick(marker.restaurant)}
                       />
                     ))}
+                    {selectedMarker && (
+                      <InfoWindow
+                        position={{
+                          lat: parseFloat(selectedMarker.latitude),
+                          lng: parseFloat(selectedMarker.longitude),
+                        }}
+                        onCloseClick={handleWindowClose}>
+                        <div className="p-2">
+                          <h3 className="font-bold">{selectedMarker.name}</h3>
+                          <p>{selectedMarker.address}</p>
+                        </div>
+                      </InfoWindow>
+                    )}
                   </Map>
                 </APIProvider>
               )}

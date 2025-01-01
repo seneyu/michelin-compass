@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { User } from '../types/interface';
+import { ApiResponse } from '../types/interface';
 
 const Signup = () => {
-  const [data, setData] = useState<User | null>(null);
+  const [data, setData] = useState<ApiResponse | null>(null);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -65,7 +65,7 @@ const Signup = () => {
       </form>
       <div>
         <br />
-        <h2>{data ? <p>Created User: {data.username}!</p> : <p></p>}</h2>
+        <h2>{data ? <p>Created User: {data.user.username}!</p> : <p></p>}</h2>
       </div>
     </div>
   );
